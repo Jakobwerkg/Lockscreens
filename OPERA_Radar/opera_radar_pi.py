@@ -9,10 +9,14 @@ Requirements:
 """
 
 import argparse
+import os
 import re
 import subprocess
+import sys
 import threading
 import tkinter as tk
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tkinter import ttk
 from datetime import datetime, timezone
 from PIL import Image, ImageTk

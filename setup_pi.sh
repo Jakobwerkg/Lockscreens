@@ -19,6 +19,7 @@ Description=OPERA Radar Display
 
 [Service]
 Environment=DISPLAY=:0
+WorkingDirectory=$REPO/OPERA_Radar
 ExecStart=/usr/bin/python3 $REPO/OPERA_Radar/opera_radar_pi.py --screen 0
 Restart=always
 RestartSec=10
