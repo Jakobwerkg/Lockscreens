@@ -8,6 +8,9 @@ Requirements:
   sudo apt install python3-tk  (Raspberry Pi)
 """
 
+import argparse
+import re
+import subprocess
 import threading
 import tkinter as tk
 from tkinter import ttk
@@ -18,6 +21,21 @@ from opera_radar_functions import (
     purge_old_cache, round_down_5min, save_animation
 )
 from datetime import datetime
+
+
+def _screen_offset(index: int) -> tuple:
+    """Return (x, y) pixel offset for monitor *index* (sorted left-to-right)."""
+    try:
+        out = subprocess.check_output(["xrandr"], text=True, stderr=subprocess.DEVNULL)
+        offsets = sorted(
+            (int(m.group(3)), int(m.group(4)))
+            for m in re.finditer(r"\bconnected\b.*?(\d+)x(\d+)\+(\d+)\+(\d+)", out)
+        )
+        if index < len(offsets):
+            return offsets[index]
+    except Exception:
+        pass
+    return (index * 1920, 0)
 
 REFRESH_SEC = 300
 N_HOURS     = 2.0
@@ -127,6 +145,13 @@ class RadarApp:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--screen", type=int, default=0,
+                        help="Monitor index (0 = leftmost, 1 = next, …)")
+    args = parser.parse_args()
+
     root = tk.Tk()
+    x, y = _screen_offset(args.screen)
+    root.geometry(f"+{x}+{y}")
     RadarApp(root)
     root.mainloop()

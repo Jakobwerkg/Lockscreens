@@ -19,7 +19,7 @@ Description=OPERA Radar Display
 
 [Service]
 Environment=DISPLAY=:0
-ExecStart=/usr/bin/python3 $REPO/OPERA_Radar/opera_radar_pi.py
+ExecStart=/usr/bin/python3 $REPO/OPERA_Radar/opera_radar_pi.py --screen 0
 Restart=always
 RestartSec=10
 
@@ -33,7 +33,7 @@ Description=TAWES UIBK Display
 
 [Service]
 Environment=DISPLAY=:0
-ExecStart=/usr/bin/python3 $REPO/TAWES_UIBK/tawes_uibk.py
+ExecStart=/usr/bin/python3 $REPO/TAWES_UIBK/tawes_uibk.py --screen 1
 Restart=always
 RestartSec=10
 
@@ -47,9 +47,15 @@ systemctl --user daemon-reload
 loginctl enable-linger "$USER"
 
 echo ""
-echo "=== Done. Enable the display you want ==="
+echo "=== Enabling both display services ==="
+systemctl --user enable --now opera-radar
+systemctl --user enable --now tawes-uibk
+
 echo ""
-echo "  OPERA Radar:  systemctl --user enable --now opera-radar"
-echo "  TAWES UIBK:   systemctl --user enable --now tawes-uibk"
+echo "=== Done ==="
 echo ""
-echo "  Note: both are fullscreen — only run one at a time."
+echo "  OPERA Radar → screen 0 (left/primary)"
+echo "  TAWES UIBK  → screen 1 (right/secondary)"
+echo ""
+echo "  To swap screens, edit --screen values in $SYSTEMD_DIR/*.service"
+echo "  then run: systemctl --user daemon-reload && systemctl --user restart opera-radar tawes-uibk"

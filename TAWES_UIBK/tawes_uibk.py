@@ -8,11 +8,29 @@ Requirements:
   sudo apt install python3-tk  (Raspberry Pi)
 """
 
+import argparse
 import io
+import re
+import subprocess
 import threading
 import tkinter as tk
 from PIL import Image, ImageTk
 import requests
+
+
+def _screen_offset(index: int) -> tuple:
+    """Return (x, y) pixel offset for monitor *index* (sorted left-to-right)."""
+    try:
+        out = subprocess.check_output(["xrandr"], text=True, stderr=subprocess.DEVNULL)
+        offsets = sorted(
+            (int(m.group(3)), int(m.group(4)))
+            for m in re.finditer(r"\bconnected\b.*?(\d+)x(\d+)\+(\d+)\+(\d+)", out)
+        )
+        if index < len(offsets):
+            return offsets[index]
+    except Exception:
+        pass
+    return (index * 1920, 0)
 
 URL         = "https://ertel2.uibk.ac.at/ertel/data/pngs/lightningmaps/entrance.png"
 REFRESH_SEC = 600  # 10 minutes
@@ -70,6 +88,13 @@ class TawesApp:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--screen", type=int, default=0,
+                        help="Monitor index (0 = leftmost, 1 = next, …)")
+    args = parser.parse_args()
+
     root = tk.Tk()
+    x, y = _screen_offset(args.screen)
+    root.geometry(f"+{x}+{y}")
     TawesApp(root)
     root.mainloop()
