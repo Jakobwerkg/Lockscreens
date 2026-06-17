@@ -14,21 +14,26 @@ Fullscreen live weather displays for Raspberry Pi.
 ### First time — Mac
 
 ```bash
-cd /Users/jakobwerkgarner/code/Lockscreens
+cd path/to/Lockscreens          # wherever you cloned / keep this repo
 git init
 git add .
 git commit -m "initial commit"
-gh repo create Lockscreens --private --source=. --push
+
+# create repo on GitHub and push (pick one):
+gh repo create Lockscreens --private --source=. --push        # with GitHub CLI
+# OR manually: create repo on github.com, then:
+git remote add origin https://github.com/<your-username>/Lockscreens.git
+git push -u origin main
 ```
 
 ### First time — Pi
 
 ```bash
-# SSH into the Pi
-ssh pi@raspberrypi.local
+# SSH into the Pi  (replace with your Pi's hostname or IP)
+ssh pi@bildschirm1.local
 
-# Clone and set up
-git clone https://github.com/jakobwerkgarner/Lockscreens.git ~/Lockscreens
+# Clone and set up  (replace with your GitHub username)
+git clone https://github.com/<your-username>/Lockscreens.git ~/Lockscreens
 cd ~/Lockscreens
 bash setup_pi.sh
 
@@ -44,7 +49,7 @@ systemctl --user enable --now tawes-uibk
 # make your changes, then:
 git add .
 git commit -m "your message"
-bash deploy.sh pi@raspberrypi.local
+bash deploy.sh pi@bildschirm1.local   # replace with your Pi's hostname or IP
 ```
 
 `deploy.sh` pushes to GitHub, SSHes to the Pi, pulls the latest code, and restarts the running service automatically.
@@ -119,5 +124,5 @@ DISPLAY=:0 python3 OPERA_Radar/opera_radar_pi.py
 **`deploy.sh` asks for a password every time**  
 Set up SSH key auth:
 ```bash
-ssh-copy-id pi@raspberrypi.local
+ssh-copy-id pi@bildschirm1.local   # replace with your Pi's hostname or IP
 ```
