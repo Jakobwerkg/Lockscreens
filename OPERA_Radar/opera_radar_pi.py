@@ -14,37 +14,39 @@ import subprocess
 import threading
 import tkinter as tk
 from tkinter import ttk
-from datetime import timezone
+from datetime import datetime, timezone
 from PIL import Image, ImageTk
 from opera_radar_functions import (
     OUTPUT_GIF, download_frames, download_single_frame,
     purge_old_cache, round_down_5min, save_animation
 )
-from datetime import datetime
-
-
-def _screen_offset(index: int) -> tuple:
-    """Return (x, y) pixel offset for monitor *index* (sorted left-to-right)."""
-    try:
-        out = subprocess.check_output(["xrandr"], text=True, stderr=subprocess.DEVNULL)
-        offsets = sorted(
-            (int(m.group(3)), int(m.group(4)))
-            for m in re.finditer(r"\bconnected\b.*?(\d+)x(\d+)\+(\d+)\+(\d+)", out)
-        )
-        if index < len(offsets):
-            return offsets[index]
-    except Exception:
-        pass
-    return (index * 1920, 0)
 
 REFRESH_SEC = 300
 N_HOURS     = 2.0
 FRAME_MS    = 200
 
 
+def _screen_geometry(index: int) -> tuple:
+    """Return (x, y, w, h) for monitor *index* (sorted left-to-right)."""
+    try:
+        out = subprocess.check_output(["xrandr"], text=True, stderr=subprocess.DEVNULL)
+        monitors = sorted(
+            (int(m.group(3)), int(m.group(4)), int(m.group(1)), int(m.group(2)))
+            for m in re.finditer(r"\bconnected\b.*?(\d+)x(\d+)\+(\d+)\+(\d+)", out)
+        )
+        if index < len(monitors):
+            return monitors[index]
+    except Exception:
+        pass
+    return (index * 1920, 0, 1920, 1080)
+
+
 class RadarApp:
-    def __init__(self, root):
-        self.root = root
+    def __init__(self, root, screen_w, screen_h):
+        self.root     = root
+        self.screen_w = screen_w
+        self.screen_h = screen_h
+
         self.root.title("OPERA Radar")
         self.root.configure(bg="black")
         self.root.attributes("-fullscreen", True)
@@ -65,8 +67,8 @@ class RadarApp:
                                fg="#cccccc", font=("DejaVu Sans Mono", 12))
         self.status.pack(side=tk.BOTTOM, pady=(4, 2))
 
-        self._raw    = []   # list of (datetime, PIL Image) — the sliding window
-        self._frames = []   # list of (datetime, PhotoImage) for display
+        self._raw    = []
+        self._frames = []
         self._idx    = 0
         self._anim_id = None
 
@@ -88,12 +90,10 @@ class RadarApp:
     def _refresh(self):
         try:
             if not self._raw:
-                # first run — download full window
                 self._set_status("Downloading …")
                 raw = download_frames(N_HOURS, progress_cb=self._set_progress)
                 self.root.after(0, self.pbar.pack_forget)
             else:
-                # incremental — fetch only the newest frame, drop the oldest
                 now = round_down_5min(datetime.now(timezone.utc))
                 self._set_status("Fetching latest frame …")
                 new = download_single_frame(now)
@@ -106,8 +106,8 @@ class RadarApp:
                 save_animation(raw, OUTPUT_GIF, frame_ms=FRAME_MS)
                 purge_old_cache()
 
-                sw = self.root.winfo_screenwidth()
-                sh = max(self.root.winfo_screenheight() - 60, 100)
+                sw = self.screen_w
+                sh = max(self.screen_h - 60, 100)
                 tk_frames = []
                 for dt, img in raw:
                     resized = img.convert("RGB")
@@ -126,7 +126,8 @@ class RadarApp:
         self._idx = 0
         first = tk_frames[0][0].strftime("%H:%M")
         last  = tk_frames[-1][0].strftime("%H:%M")
-        self._set_status(f"{len(tk_frames)} frames · {first}–{last} UTC · +{REFRESH_SEC // 60} min")
+        ts    = datetime.now().strftime("%H:%M")
+        self._set_status(f"{len(tk_frames)} frames · {first}–{last} UTC · Updated at: {ts}")
         if self._anim_id:
             self.root.after_cancel(self._anim_id)
         self._tick()
@@ -136,7 +137,7 @@ class RadarApp:
             return
         dt, photo = self._frames[self._idx]
         self.img_label.configure(image=photo)
-        self.img_label.image = photo  # prevent GC
+        self.img_label.image = photo
         self._idx = (self._idx + 1) % len(self._frames)
         self._anim_id = self.root.after(FRAME_MS, self._tick)
 
@@ -150,8 +151,10 @@ if __name__ == "__main__":
                         help="Monitor index (0 = leftmost, 1 = next, …)")
     args = parser.parse_args()
 
+    sx, sy, sw, sh = _screen_geometry(args.screen)
+
     root = tk.Tk()
-    x, y = _screen_offset(args.screen)
-    root.geometry(f"+{x}+{y}")
-    RadarApp(root)
+    root.geometry(f"{sw}x{sh}+{sx}+{sy}")
+    root.update()  # let WM place the window before going fullscreen
+    RadarApp(root, screen_w=sw, screen_h=sh)
     root.mainloop()
