@@ -53,7 +53,6 @@ class RadarApp:
 
         self.root.title("OPERA Radar")
         self.root.configure(bg="black")
-        self.root.overrideredirect(True)  # borderless, stays on the screen set by geometry
         self.root.bind("<Escape>", lambda _: self.root.quit())
         self.root.bind("q", lambda _: self.root.quit())
 
