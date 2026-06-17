@@ -1,0 +1,8 @@
+# generated files
+*/opera_radar.gif
+*/cache/
+
+# macOS
+.DS_Store
+__pycache__/
+*.pyc
