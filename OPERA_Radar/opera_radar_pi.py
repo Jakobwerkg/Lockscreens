@@ -53,11 +53,9 @@ class RadarApp:
 
         self.root.title("OPERA Radar")
         self.root.configure(bg="black")
-        self.root.attributes("-fullscreen", True)
+        self.root.overrideredirect(True)  # borderless, stays on the screen set by geometry
         self.root.bind("<Escape>", lambda _: self.root.quit())
         self.root.bind("q", lambda _: self.root.quit())
-        self.root.bind("f", lambda _: self.root.attributes("-fullscreen",
-                                        not self.root.attributes("-fullscreen")))
 
         self.img_label = tk.Label(self.root, bg="black", bd=0)
         self.img_label.pack(expand=True, fill=tk.BOTH)
