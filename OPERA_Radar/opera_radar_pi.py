@@ -155,7 +155,10 @@ if __name__ == "__main__":
     sx, sy, sw, sh = _screen_geometry(args.screen)
 
     root = tk.Tk()
+    root.withdraw()              # hide before first map so overrideredirect takes effect
+    root.overrideredirect(True)
     root.geometry(f"{sw}x{sh}+{sx}+{sy}")
-    root.update()  # let WM place the window before going fullscreen
+    root.deiconify()
+    root.update()
     RadarApp(root, screen_w=sw, screen_h=sh)
     root.mainloop()

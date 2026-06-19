@@ -45,7 +45,6 @@ class TawesApp:
 
         self.root.title("TAWES UIBK")
         self.root.configure(bg="black")
-        self.root.overrideredirect(True)  # borderless, stays on the screen set by geometry
         self.root.bind("<Escape>", lambda _: self.root.quit())
         self.root.bind("q",        lambda _: self.root.quit())
 
@@ -99,7 +98,10 @@ if __name__ == "__main__":
     sx, sy, sw, sh = _screen_geometry(args.screen)
 
     root = tk.Tk()
+    root.withdraw()              # hide before first map so overrideredirect takes effect
+    root.overrideredirect(True)
     root.geometry(f"{sw}x{sh}+{sx}+{sy}")
-    root.update()  # let WM place the window before going fullscreen
+    root.deiconify()
+    root.update()
     TawesApp(root, screen_w=sw, screen_h=sh)
     root.mainloop()
