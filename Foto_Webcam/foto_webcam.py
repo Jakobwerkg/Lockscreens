@@ -10,6 +10,7 @@ Requirements:
 
 import argparse
 import io
+import platform
 import re
 import subprocess
 import threading
@@ -108,7 +109,9 @@ class FotoWebcamApp:
             img, label = _fetch_image(cam)
             sw = self.screen_w
             sh = max(self.screen_h - 40, 100)
-            img.thumbnail((sw, sh), Image.LANCZOS)
+            iw, ih = img.size
+            scale = min(sw / iw, sh / ih)
+            img = img.resize((int(iw * scale), int(ih * scale)), Image.LANCZOS)
             photo = ImageTk.PhotoImage(img)
             with self._lock:
                 self._photos[cam] = (photo, label)
@@ -178,8 +181,13 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.withdraw()
     sx, sy, sw, sh = _screen_geometry(args.screen, root)
-    root.overrideredirect(True)
-    root.geometry(f"{sw}x{sh}+{sx}+{sy}")
+    if platform.system() == "Darwin":
+        # macOS: native fullscreen hides menu bar and dock
+        root.attributes("-fullscreen", True)
+    else:
+        # Linux/X11: borderless window covering the target monitor
+        root.overrideredirect(True)
+        root.geometry(f"{sw}x{sh}+{sx}+{sy}")
     root.deiconify()
     root.update()
     FotoWebcamApp(root, screen_w=sw, screen_h=sh, webcams=args.webcams)
