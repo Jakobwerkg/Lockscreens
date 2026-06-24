@@ -135,9 +135,8 @@ class FotoWebcamApp:
         )
         self.status.pack(side=tk.BOTTOM, pady=(4, 2))
 
-        # cache: cam → (PIL Image, label str)  and  cam → (PhotoImage, label str)
+        # cache: cam → (PIL Image, label str)
         self._raw:   dict[str, tuple[Image.Image, str]] = {}
-        self._photos: dict[str, tuple[ImageTk.PhotoImage, str]] = {}
         self._lock  = threading.Lock()
 
         self._idx      = 0
@@ -155,26 +154,18 @@ class FotoWebcamApp:
 
     def _fetch_and_cache(self, cam: str):
         try:
-            img, label = _fetch_image(cam)
-            sw = self.screen_w
-            sh = max(self.screen_h - 40, 100)
-            iw, ih = img.size
-            scale = min(sw / iw, sh / ih)
-            img = img.resize((int(iw * scale), int(ih * scale)), Image.LANCZOS)
-            photo = ImageTk.PhotoImage(img)
+            img, label = _fetch_image(cam)          # PIL image only (thread-safe)
             with self._lock:
-                self._photos[cam] = (photo, label)
-            # if this is the currently displayed cam, refresh it immediately
+                self._raw[cam] = (img, label)
             if self.webcams[self._idx] == cam:
                 self.root.after(0, self._show_current)
         except Exception as e:
-            # leave stale image in place; update status only if currently shown
             if self.webcams[self._idx] == cam:
                 self._set_status(f"Error ({cam}): {e}")
 
     def _schedule_refresh(self, cam: str):
         threading.Thread(target=self._fetch_and_cache, args=(cam,), daemon=True).start()
-        self.root.after(REFRESH_SEC * 1000, lambda: self._schedule_refresh(cam))
+        self.root.after(REFRESH_SEC * 1000, lambda c=cam: self._schedule_refresh(c))
 
     # ── slideshow ────────────────────────────────────────────────────────────
 
@@ -196,9 +187,17 @@ class FotoWebcamApp:
         cam = self.webcams[self._idx]
         n   = len(self.webcams)
         with self._lock:
-            entry = self._photos.get(cam)
+            entry = self._raw.get(cam)
         if entry:
-            photo, label = entry
+            pil_img, label = entry
+            # PhotoImage MUST be created in main thread (fixes silent exit + update bug)
+            sw = self.screen_w
+            sh = max(self.screen_h - 40, 100)
+            iw, ih = pil_img.size
+            scale = min(sw / iw, sh / ih)
+            resized = pil_img.resize((int(iw * scale), int(ih * scale)), Image.LANCZOS)
+            photo = ImageTk.PhotoImage(resized)
+
             self.img_label.configure(image=photo)
             self.img_label.image = photo
             self._set_status(
