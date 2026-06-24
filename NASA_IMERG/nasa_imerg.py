@@ -113,6 +113,9 @@ def ensure_latest_animation(progress_cb=None):
         try:
             subprocess.run(cmd, check=True, capture_output=True, text=True)
             print(f"[IMERG] Extracted {len(list(FRAMES_DIR.glob('*.png')))} frames")
+        except FileNotFoundError:
+            print("[IMERG] ffmpeg not found — install with: sudo apt install ffmpeg")
+            return False
         except subprocess.CalledProcessError as e:
             print(f"[IMERG] ffmpeg failed: {e.stderr}")
             return False

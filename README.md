@@ -9,7 +9,7 @@ Fullscreen live weather displays for Raspberry Pi, running across two screens.
 | Pi | SSH | Screen 0 | Screen 1 |
 |---|---|---|---|
 | **Pi2** | `ssh bildschirm2@192.168.0.172` | OPERA Radar | TAWES UIBK |
-| **Pi1** | `ssh bildschirm1@192.168.0.236` | Foto-Webcam | NASA IMERG |
+| **Pi1** | `ssh bildschirm1@192.168.0.236` | NASA IMERG | Foto-Webcam |
 
 ### Apps
 
@@ -55,11 +55,11 @@ DISPLAY=:0 python3 ~/Lockscreens/OPERA_Radar/opera_radar_pi.py --screen 0 &
 DISPLAY=:0 python3 ~/Lockscreens/TAWES_UIBK/tawes_uibk.py --screen 1 &
 ```
 
-**Pi1** (`bildschirm1@192.168.0.236` — Foto-Webcam + NASA IMERG):
+**Pi1** (`bildschirm1@192.168.0.236` — NASA IMERG + Foto-Webcam):
 ```bash
 pkill -f foto_webcam.py; pkill -f nasa_imerg.py
-DISPLAY=:0 python3 ~/Lockscreens/Foto_Webcam/foto_webcam.py --screen 0 &
-DISPLAY=:0 python3 ~/Lockscreens/NASA_IMERG/nasa_imerg.py --screen 1 &
+DISPLAY=:0 python3 ~/Lockscreens/NASA_IMERG/nasa_imerg.py --screen 0 &
+DISPLAY=:0 python3 ~/Lockscreens/Foto_Webcam/foto_webcam.py --screen 1 &
 ```
 
 Or just reboot the Pi — both apps start automatically via `~/.config/autostart/`.
@@ -90,8 +90,8 @@ bash NASA_IMERG/install_pi.sh      # Pi1
 # set up autostart
 bash OPERA_Radar/setup_autostart.sh   # Pi2 – screen 0
 bash TAWES_UIBK/setup_autostart.sh   # Pi2 – screen 1
-bash Foto_Webcam/setup_autostart.sh  # Pi1 – screen 0
-bash NASA_IMERG/setup_autostart.sh   # Pi1 – screen 1
+bash NASA_IMERG/setup_autostart.sh   # Pi1 – screen 0
+bash Foto_Webcam/setup_autostart.sh  # Pi1 – screen 1
 ```
 
 ---
