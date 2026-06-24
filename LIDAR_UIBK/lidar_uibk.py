@@ -3,7 +3,7 @@ LIDAR UIBK – fullscreen live PNG display
 Updates every ~5-10 min when new image is available.
 Q / Escape = quit
 """
-
+import io
 import argparse
 import platform
 import re
