@@ -2,6 +2,7 @@
 Foto-Webcam slideshow – cycles through multiple foto-webcam.eu cameras fullscreen.
   Q / Escape  quit
   Left / Right arrow  jump to previous / next camera
+  --wifi-ssid NAME --wifi-pass PASS   auto-connect to WiFi on startup (optional)
 
 Requirements:
   pip install requests pillow
@@ -12,8 +13,10 @@ import argparse
 import io
 import platform
 import re
+import socket
 import subprocess
 import threading
+import time
 import tkinter as tk
 from datetime import datetime, timezone
 from PIL import Image, ImageTk
@@ -25,6 +28,10 @@ WEBCAMS = [
     "innsbruck-uni-west",
     "innsbruck-uni",
     "kleinfleisskees",
+    "braunschweigerhuette",
+    "konkordiahuette",
+    "innsbruck",
+    "zugspitze",
 ]
 
 SLIDE_SEC   = 10    # seconds between automatic slides
@@ -59,6 +66,48 @@ def _fetch_image(cam: str) -> tuple[Image.Image, str]:
     img   = Image.open(io.BytesIO(resp.content)).convert("RGB")
     label = datetime.now(timezone.utc).strftime("%Y-%m-%d  %H:%M UTC")
     return img, label
+
+
+# ── WiFi auto-connect (nmcli) ───────────────────────────────────────────────
+
+def _is_internet() -> bool:
+    """Quick check: can we reach public DNS?"""
+    try:
+        socket.create_connection(("8.8.8.8", 53), timeout=3)
+        return True
+    except OSError:
+        return False
+
+
+def _wait_for_internet(timeout_sec: int = 60) -> bool:
+    for _ in range(timeout_sec):
+        if _is_internet():
+            return True
+        time.sleep(1)
+    return False
+
+
+def ensure_wifi_connected(ssid: str | None, password: str | None):
+    """If ssid given: connect via nmcli if needed. Otherwise just wait briefly for DHCP."""
+    if not ssid:
+        _wait_for_internet(25)  # allow normal boot DHCP
+        return
+    if _is_internet():
+        return
+    print(f"[WiFi] Connecting to '{ssid}' ...")
+    try:
+        subprocess.run(
+            ["nmcli", "device", "wifi", "connect", ssid, "password", password],
+            check=False, timeout=45, capture_output=True, text=True
+        )
+        if _wait_for_internet(90):
+            print("[WiFi] Connected + internet OK.")
+        else:
+            print("[WiFi] WiFi up but internet not confirmed yet.")
+    except FileNotFoundError:
+        print("[WiFi] nmcli not installed. Configure WiFi once via desktop or raspi-config.")
+    except Exception as e:
+        print(f"[WiFi] Auto-connect failed: {e}")
 
 
 # ── app ──────────────────────────────────────────────────────────────────────
@@ -174,9 +223,15 @@ if __name__ == "__main__":
                         help="foto-webcam.eu camera slugs to display")
     parser.add_argument("--slide",   type=int, default=SLIDE_SEC,
                         help="Seconds between slides (default 10)")
+    parser.add_argument("--wifi-ssid", default=None,
+                        help="WiFi SSID for auto-connect on boot (optional)")
+    parser.add_argument("--wifi-pass", default=None,
+                        help="WiFi password (paired with --wifi-ssid)")
     args = parser.parse_args()
 
     SLIDE_SEC = args.slide
+
+    ensure_wifi_connected(args.wifi_ssid, args.wifi_pass)
 
     root = tk.Tk()
     root.withdraw()

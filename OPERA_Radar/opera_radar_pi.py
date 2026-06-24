@@ -3,6 +3,9 @@ OPERA Radar – fullscreen animated display.
   Q / Escape  quit
   F           toggle fullscreen
 
+  Now uses up to ~100 frames (last ~8.5 hours) and always advances
+  to the most recent available frame on each refresh.
+
 Requirements:
   pip install requests pillow
   sudo apt install python3-tk  (Raspberry Pi)
@@ -18,7 +21,7 @@ import tkinter as tk
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tkinter import ttk
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from PIL import Image, ImageTk
 from opera_radar_functions import (
     OUTPUT_GIF, download_frames, download_single_frame,
@@ -26,7 +29,7 @@ from opera_radar_functions import (
 )
 
 REFRESH_SEC = 300
-N_HOURS     = 2.0
+N_HOURS     = 8.5   # ~100 frames (5-min radar)
 FRAME_MS    = 200
 
 
@@ -95,17 +98,36 @@ class RadarApp:
                 raw = download_frames(N_HOURS, progress_cb=self._set_progress)
                 self.root.after(0, self.pbar.pack_forget)
             else:
+                # --- FIX: always try to pull the most recent available frames ---
+                self._set_status("Fetching latest frames …")
                 now = round_down_5min(datetime.now(timezone.utc))
-                self._set_status("Fetching latest frame …")
-                new = download_single_frame(now)
-                raw = (self._raw[1:] + [new]) if new else self._raw
+                new_frames = []
+                # Check up to last 6 slots (30 min) so we catch the real latest
+                # even if the exact current 5-min slot has no image yet on server
+                for i in range(6):
+                    dt = now - timedelta(minutes=5 * i)
+                    if self._raw and dt <= self._raw[-1][0]:
+                        break
+                    f = download_single_frame(dt)
+                    if f:
+                        new_frames.append(f)
+                if new_frames:
+                    # merge + deduplicate by timestamp, keep only the newest N_HOURS worth
+                    combined = self._raw + new_frames
+                    seen = {}
+                    for dt, img in combined:
+                        seen[dt] = img
+                    max_frames = int(N_HOURS * 12) + 1
+                    raw = sorted(seen.items())[-max_frames:]
+                else:
+                    raw = self._raw
 
             if not raw:
                 self._set_status("No frames — retrying in 5 min")
             else:
                 self._raw = raw
                 save_animation(raw, OUTPUT_GIF, frame_ms=FRAME_MS)
-                purge_old_cache()
+                purge_old_cache(keep_hours=12)
 
                 sw = self.screen_w
                 sh = max(self.screen_h - 60, 100)
@@ -155,7 +177,7 @@ if __name__ == "__main__":
     sx, sy, sw, sh = _screen_geometry(args.screen)
 
     root = tk.Tk()
-    root.withdraw()              # hide before first map so overrideredirect takes effect
+    root.withdraw()
     root.overrideredirect(True)
     root.geometry(f"{sw}x{sh}+{sx}+{sy}")
     root.deiconify()
