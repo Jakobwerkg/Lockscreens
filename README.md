@@ -1,79 +1,119 @@
 # Lockscreens
 
-Fullscreen live weather displays for Raspberry Pi.
+Fullscreen live weather displays for Raspberry Pi, running across two screens.
+
+---
+
+## Screens at a glance
+
+| Pi | SSH | Screen 0 | Screen 1 |
+|---|---|---|---|
+| **Pi2** | `ssh bildschirm2@192.168.0.172` | OPERA Radar | TAWES UIBK |
+| **Pi1** | `ssh bildschirm1@192.168.0.236` | Foto-Webcam | NASA IMERG |
+
+### Apps
 
 | App | Source | Refresh |
 |---|---|---|
 | `OPERA_Radar` | EUMETNET OPERA max-reflectivity composite | 5 min |
 | `TAWES_UIBK` | UIBK lightning/weather map | 10 min |
+| `Foto_Webcam` | foto-webcam.eu – webcam slideshow (Heiligenblut, Innsbruck, …) | 5 min / 10 s slide |
+| `NASA_IMERG` | NASA global precipitation (IMERG) | 30 min |
 
 ---
 
-## Workflow
-
-### First time — Mac
+## Daily workflow — edit on Mac, deploy to Pi
 
 ```bash
-cd path/to/Lockscreens          # wherever you cloned / keep this repo
-git init
-git add .
-git commit -m "initial commit"
-
-# create repo on GitHub and push (pick one):
-gh repo create Lockscreens --private --source=. --push        # with GitHub CLI
-# OR manually: create repo on github.com, then:
-git remote add origin https://github.com/<your-username>/Lockscreens.git
-git push -u origin main
-```
-
-### First time — Pi
-
-```bash
-# SSH into the Pi  (replace with your Pi's hostname or IP)
-ssh pi@bildschirm1.local
-
-# Clone and set up  (replace with your GitHub username)
-git clone https://github.com/<your-username>/Lockscreens.git ~/Lockscreens
-cd ~/Lockscreens
-bash setup_pi.sh
-
-# Enable the display you want (only one at a time — both are fullscreen)
-systemctl --user enable --now opera-radar
-# or
-systemctl --user enable --now tawes-uibk
-```
-
-### Daily — edit on Mac, deploy to Pi
-
-```bash
-# make your changes, then:
-git add .
+git add <files>
 git commit -m "your message"
-bash deploy.sh pi@bildschirm1.local   # replace with your Pi's hostname or IP
+git push
+
+# then on the Pi:
+ssh bildschirm2@192.168.0.172
+cd ~/Lockscreens && git pull
+# restart the processes (see below)
 ```
 
-`deploy.sh` pushes to GitHub, SSHes to the Pi, pulls the latest code, and restarts the running service automatically.
+Or use `deploy.sh` which does push + pull + restart in one step:
+
+```bash
+bash deploy.sh bildschirm2@192.168.0.172
+bash deploy.sh bildschirm1@192.168.0.236
+```
 
 ---
 
-## Service commands (on the Pi)
+## Restarting apps on the Pi
+
+After a `git pull`, kill the old processes and relaunch:
+
+**Pi2** (`bildschirm2@192.168.0.172` — OPERA Radar + TAWES):
+```bash
+pkill -f opera_radar_pi.py; pkill -f tawes_uibk.py
+DISPLAY=:0 python3 ~/Lockscreens/OPERA_Radar/opera_radar_pi.py --screen 0 &
+DISPLAY=:0 python3 ~/Lockscreens/TAWES_UIBK/tawes_uibk.py --screen 1 &
+```
+
+**Pi1** (`bildschirm1@192.168.0.236` — Foto-Webcam + NASA IMERG):
+```bash
+pkill -f foto_webcam.py; pkill -f nasa_imerg.py
+DISPLAY=:0 python3 ~/Lockscreens/Foto_Webcam/foto_webcam.py --screen 0 &
+DISPLAY=:0 python3 ~/Lockscreens/NASA_IMERG/nasa_imerg.py --screen 1 &
+```
+
+Or just reboot the Pi — both apps start automatically via `~/.config/autostart/`.
+
+---
+
+## First-time setup
+
+### Mac
 
 ```bash
-# status
-systemctl --user status opera-radar
-systemctl --user status tawes-uibk
+git clone https://github.com/Jakobwerkg/Lockscreens.git
+cd Lockscreens
+```
 
-# start / stop / restart
-systemctl --user start opera-radar
-systemctl --user stop opera-radar
-systemctl --user restart opera-radar
+### Pi (run once after cloning)
 
-# logs
-journalctl --user -u opera-radar -f
+```bash
+git clone https://github.com/Jakobwerkg/Lockscreens.git ~/Lockscreens
+cd ~/Lockscreens
 
-# switch display (stop one, start the other)
-systemctl --user stop opera-radar
-systemctl --user start tawes-uibk
+# install dependencies
+bash OPERA_Radar/install_pi.sh     # Pi2
+bash TAWES_UIBK/install_pi.sh      # Pi2
+bash Foto_Webcam/install_pi.sh     # Pi1
+bash NASA_IMERG/install_pi.sh      # Pi1
+
+# set up autostart
+bash OPERA_Radar/setup_autostart.sh   # Pi2 – screen 0
+bash TAWES_UIBK/setup_autostart.sh   # Pi2 – screen 1
+bash Foto_Webcam/setup_autostart.sh  # Pi1 – screen 0
+bash NASA_IMERG/setup_autostart.sh   # Pi1 – screen 1
+```
+
+---
+
+## Troubleshooting
+
+**No window appears after reboot**
+Make sure the Pi boots to desktop with auto-login:
+`sudo raspi-config` → System Options → Boot / Auto Login → Desktop Autologin
+
+**Running manually over SSH**
+```bash
+DISPLAY=:0 python3 ~/Lockscreens/OPERA_Radar/opera_radar_pi.py --screen 0
+```
+
+**TAWES shows "Error: … retrying"**
+The source URL at `ertel2.uibk.ac.at` is temporarily unreachable — the app retries automatically every 10 minutes.
+
+**SSH without password prompts**
+```bash
+ssh-copy-id bildschirm2@192.168.0.172
+ssh-copy-id bildschirm1@192.168.0.236
 ```
 
 ---
@@ -82,47 +122,10 @@ systemctl --user start tawes-uibk
 
 ```
 Lockscreens/
-  deploy.sh          ← run on Mac to push + deploy to Pi
-  setup_pi.sh        ← run once on Pi after cloning
-  .gitignore
-  OPERA_Radar/
-    opera_radar_pi.py
-    opera_radar_functions.py
-    install_pi.sh
-    README.md
-  TAWES_UIBK/
-    tawes_uibk.py
-    install_pi.sh
-    README.md
-```
-
----
-
-## Requirements
-
-**Mac**
-```bash
-pip install pillow requests
-brew install python-tk  # only if installed via Homebrew
-```
-
-**Pi** — handled by `setup_pi.sh` / `install_pi.sh`.
-
----
-
-## Troubleshooting
-
-**Service starts but no window appears on Pi**  
-Make sure the Pi boots to desktop with auto-login enabled:
-`sudo raspi-config` → System Options → Boot / Auto Login → Desktop Autologin
-
-**Running over SSH (no desktop)**  
-```bash
-DISPLAY=:0 python3 OPERA_Radar/opera_radar_pi.py
-```
-
-**`deploy.sh` asks for a password every time**  
-Set up SSH key auth:
-```bash
-ssh-copy-id pi@bildschirm1.local   # replace with your Pi's hostname or IP
+  deploy.sh              ← push + pull + restart on Pi
+  setup_pi.sh            ← run once on Pi after cloning
+  OPERA_Radar/           → Pi2, screen 0
+  TAWES_UIBK/            → Pi2, screen 1
+  Foto_Webcam/           → Pi1, screen 0
+  NASA_IMERG/            → Pi1, screen 1
 ```
