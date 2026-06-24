@@ -6,7 +6,7 @@ cat > "$HOME/.config/autostart/foto-webcam.desktop" <<DESKTOP
 [Desktop Entry]
 Type=Application
 Name=Foto-Webcam
-Exec=python3 ~/Lockscreens/Foto_Webcam/foto_webcam.py --screen 1 --wifi-ssid "UPC2254097" --wifi-pass "Kps8hhpkrnak"
+Exec=python3 $SCRIPT_DIR/foto_webcam.py --screen 1
 X-GNOME-Autostart-enabled=true
 DESKTOP
 echo "Autostart entry written → $HOME/.config/autostart/foto-webcam.desktop"
