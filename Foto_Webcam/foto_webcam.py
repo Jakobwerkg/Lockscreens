@@ -25,12 +25,15 @@ import requests
 # ── cameras to display ──────────────────────────────────────────────────────
 WEBCAMS = [
     "heiligenblut",
+    "innsbruck",
     "innsbruck-uni-west",
     "innsbruck-uni",
+    "moesern",
     "kleinfleisskees",
     "braunschweigerhuette",
+    "kuersingerhuette",
+    "grossvenediger",
     "konkordiahuette",
-    "innsbruck",
     "zugspitze",
 ]
 
