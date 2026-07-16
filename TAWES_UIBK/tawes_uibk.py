@@ -18,7 +18,7 @@ from datetime import datetime
 from PIL import Image, ImageTk
 import requests
 
-URL         = "https://ertel2.uibk.ac.at/ertel/data/pngs/lightningmaps/entrance.png"
+URL         = "https://ertel2.uibk.ac.at/ertel/tawes_style_001_current.png"
 REFRESH_SEC = 600  # 10 minutes
 
 
