@@ -6,7 +6,7 @@ cat > "$HOME/.config/autostart/nasa-imerg.desktop" <<DESKTOP
 [Desktop Entry]
 Type=Application
 Name=NASA IMERG
-Exec=python3 $SCRIPT_DIR/nasa_imerg.py --screen 1
+Exec=python3 $SCRIPT_DIR/nasa_imerg.py --screen 0
 X-GNOME-Autostart-enabled=true
 DESKTOP
 echo "Autostart entry written → $HOME/.config/autostart/nasa-imerg.desktop"
