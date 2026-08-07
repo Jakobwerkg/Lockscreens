@@ -19,7 +19,7 @@ Fullscreen live weather displays for Raspberry Pi, running across two screens.
 | `TAWES_UIBK` | UIBK lightning/weather map | 10 min |
 | `Foto_Webcam` | foto-webcam.eu – webcam slideshow (Heiligenblut, Innsbruck, …) | 5 min / 10 s slide |
 | `NASA_IMERG` | NASA global precipitation (IMERG) | 30 min |
-| `SPARTACUS_Anomaly` | GeoSphere SPARTACUS v3 – 7-day anomaly vs. 1991–2020 | daily, 06:00 |
+| `SPARTACUS_Anomaly` | GeoSphere SPARTACUS v3 – 7-day anomaly vs. 1991–2020 | on startup + 6 h |
 
 `SPARTACUS_Anomaly` is not assigned to a screen yet — both Pis are full. Run it
 on whichever screen you want to free up (see [SPARTACUS_Anomaly/README.md](SPARTACUS_Anomaly/README.md)).

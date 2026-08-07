@@ -43,7 +43,8 @@ Bavaria, Bohemia and Slovakia. The white line is where Austria actually ends.
 
 ## How it works
 
-Every day at **06:00 local time**:
+**On every startup**, and every 6 hours after that for as long as it keeps
+running:
 
 1. Ask the archive for the latest available day (it publishes with a lag of
    1–2 days, and the last 7 days are still being quality-corrected).
@@ -73,17 +74,51 @@ inside both and backs off on HTTP 429.
 
 ---
 
+## How long a start takes
+
+Response time per API call is roughly 2.5–5 s and is dominated by server
+latency, not by how much data is asked for — so the cost of an update is
+mostly *how many requests* it needs, not how many megabytes.
+
+| Phase | Mac (measured) | Pi 4 (estimate) |
+|---|---|---|
+| Boot to desktop autologin | — | 30–45 s |
+| Python imports + window up | 0.5 s | 8–15 s |
+| **→ last render visible** | — | **≈ 1 min after power-on** |
+| Metadata + 7-day download | 5 s | 5–10 s |
+| Climatology (already cached) | 0.1 s | 1–2 s |
+| Render the PNG | 0.4 s | 3–5 s |
+| **→ fresh dashboard, same day** | ≈ 6 s | **≈ 15–20 s** |
+| 30 requests for one new calendar day | 1.5–2 min | 2–3 min |
+| **→ fresh dashboard, new day** | ≈ 2 min | **≈ 3 min** |
+| **→ first run ever, empty cache** | ≈ 3 min | **≈ 4–5 min** |
+
+The screen is never blank while any of this happens: the previous render is
+shown immediately and the fetch runs on a background thread behind it. Only
+the very first run — with no cached PNG — shows a progress message instead.
+
+Note that a new calendar day always costs 30 requests, one per climatology
+year, no matter that it is a single day's worth of data. That is why the
+daily update takes minutes rather than seconds even though it only moves
+about 15 MB.
+
+---
+
 ## Running it
 
 ```bash
 python3 spartacus_anomaly.py --screen 0
 ```
 
-Keys: `Q` / `Esc` quit, `R` force a refresh now.
+Keys: `Q` / `Esc` quit, `R` refresh now.
 
-If a rendered PNG is already on disk it appears immediately, so a restart is
-instant; the download only happens if that image is older than the most recent
-06:00.
+There is no fixed update time — a restart is always a refresh. If a rendered
+PNG is already on disk it appears immediately so the screen is never blank,
+while the current data is fetched behind it.
+
+Repeated restarts on the same day are cheap: the 7-day window is cached under
+its own date range, so the NetCDF is only re-downloaded once the archive
+publishes a new day.
 
 Render a PNG without the GUI (useful for testing):
 
@@ -118,5 +153,5 @@ python3-matplotlib python3-netcdf4 python3-requests`.
 | `spartacus_data.py` | API access, download cache, 1991–2020 climatology, anomalies |
 | `spartacus_plot.py` | Renders the dashboard PNG |
 | `borders.npz` | National borders, lon/lat (Natural Earth 1:10 m, public domain) |
-| `spartacus_anomaly.py` | Fullscreen Tk app + daily 06:00 scheduler |
+| `spartacus_anomaly.py` | Fullscreen Tk app, refreshes on startup and every 6 h |
 | `cache/` | NetCDF downloads, climatology `.npz`, rendered PNG (git-ignored) |
