@@ -19,6 +19,10 @@ Fullscreen live weather displays for Raspberry Pi, running across two screens.
 | `TAWES_UIBK` | UIBK lightning/weather map | 10 min |
 | `Foto_Webcam` | foto-webcam.eu – webcam slideshow (Heiligenblut, Innsbruck, …) | 5 min / 10 s slide |
 | `NASA_IMERG` | NASA global precipitation (IMERG) | 30 min |
+| `SPARTACUS_Anomaly` | GeoSphere SPARTACUS v3 – 7-day anomaly vs. 1991–2020 | daily, 06:00 |
+
+`SPARTACUS_Anomaly` is not assigned to a screen yet — both Pis are full. Run it
+on whichever screen you want to free up (see [SPARTACUS_Anomaly/README.md](SPARTACUS_Anomaly/README.md)).
 
 ---
 
@@ -86,12 +90,14 @@ bash OPERA_Radar/install_pi.sh     # Pi2
 bash TAWES_UIBK/install_pi.sh      # Pi2
 bash Foto_Webcam/install_pi.sh     # Pi1
 bash NASA_IMERG/install_pi.sh      # Pi1
+bash SPARTACUS_Anomaly/install_pi.sh
 
 # set up autostart
 bash OPERA_Radar/setup_autostart.sh   # Pi2 – screen 0
 bash TAWES_UIBK/setup_autostart.sh   # Pi2 – screen 1
 bash NASA_IMERG/setup_autostart.sh   # Pi1 – screen 0
 bash Foto_Webcam/setup_autostart.sh  # Pi1 – screen 1
+bash SPARTACUS_Anomaly/setup_autostart.sh 0   # argument = monitor index
 ```
 
 ---
@@ -126,6 +132,7 @@ Lockscreens/
   setup_pi.sh            ← run once on Pi after cloning
   OPERA_Radar/           → Pi2, screen 0
   TAWES_UIBK/            → Pi2, screen 1
-  Foto_Webcam/           → Pi1, screen 0
-  NASA_IMERG/            → Pi1, screen 1
+  NASA_IMERG/            → Pi1, screen 0
+  Foto_Webcam/           → Pi1, screen 1
+  SPARTACUS_Anomaly/     → not assigned to a screen yet
 ```
