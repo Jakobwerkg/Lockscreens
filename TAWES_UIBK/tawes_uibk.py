@@ -17,9 +17,9 @@ import requests
 
 STATIONS = [
     {"url": "https://ertel2.uibk.ac.at/ertel/tawes_style_001_current.png", "name": "TAWES IBK"},
-    {"url": "https://ertel2.uibk.ac.at/ertel/tawes_style_002_current.png", "name": "TAWES Obergurgl"},
-    {"url": "https://ertel2.uibk.ac.at/ertel/tawes_style_309_current.png", "name": "FAIR Mast"},
-    {"url": "https://ertel2.uibk.ac.at/ertel/berliner.png", "name": "Berliner Huette"},
+    #{"url": "https://ertel2.uibk.ac.at/ertel/tawes_style_002_current.png", "name": "TAWES Obergurgl"},
+    #{"url": "https://ertel2.uibk.ac.at/ertel/tawes_style_309_current.png", "name": "FAIR Mast"},
+    #{"url": "https://ertel2.uibk.ac.at/ertel/berliner.png", "name": "Berliner Huette"},
     
 ]
 SWITCH_SEC   = 15

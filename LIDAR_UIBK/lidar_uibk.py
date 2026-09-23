@@ -1,6 +1,6 @@
 """
-LIDAR UIBK + HATPRO – fullscreen live PNG display
-Switches every 60 s between images.
+LIDAR UIBK #+ HATPRO – fullscreen live PNG display
+#Switches every 60 s between images.
 Updates (ETag check) every 300 s.
 Q / Escape = quit
 """
@@ -15,7 +15,7 @@ from PIL import Image, ImageTk
 import requests
 
 LIDAR_URL = "https://ertel2.uibk.ac.at/ertel/data/pngs/lidar142_current.png"
-HATPRO_URL = "https://ertel2.uibk.ac.at/ertel/data/pngs/hatpro/hatpro_current.png"
+# HATPRO_URL = "https://ertel2.uibk.ac.at/ertel/data/pngs/hatpro/hatpro_current.png"
 REFRESH_SEC = 300
 SWITCH_SEC = 60
 
@@ -42,11 +42,11 @@ class LidarApp:
 
         self.images = [
             {"url": LIDAR_URL, "name": "LIDAR", "etag": None, "photo": None, "last_update": None},
-            {"url": HATPRO_URL, "name": "HATPRO", "etag": None, "photo": None, "last_update": None},
+            # {"url": HATPRO_URL, "name": "HATPRO", "etag": None, "photo": None, "last_update": None},
         ]
         self.current_idx = 0
 
-        self.root.title("LIDAR + HATPRO")
+        self.root.title("LIDAR")  # + HATPRO
         self.root.configure(bg="black")
         self.root.bind("<Escape>", lambda _: self.root.quit())
         self.root.bind("q", lambda _: self.root.quit())

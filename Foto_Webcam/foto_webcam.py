@@ -31,7 +31,7 @@ WEBCAMS = [
     "moesern",
     "kleinfleisskees",
     "braunschweigerhuette",
-    "kuersingerhuette",
+    #"kuersingerhuette",
     "grossvenediger",
     "konkordiahuette",
     "zugspitze",
