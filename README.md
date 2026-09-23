@@ -8,8 +8,8 @@ Fullscreen live weather displays for Raspberry Pi, running across two screens.
 
 | Pi | SSH | Screen 0 | Screen 1 |
 |---|---|---|---|
-| **Pi2** | `bildschirm2@xxxxxxxx.172` | OPERA Radar | TAWES UIBK |
-| **Pi1** | `bildschirm1@xxxxxxxx.236` | NASA IMERG | Foto-Webcam |
+| **Pi2** | `bildschirm2` | OPERA Radar | TAWES UIBK |
+| **Pi1** | `bildschirm1 | NASA IMERG | Foto-Webcam |
 
 ### Apps
 
