@@ -1,15 +1,10 @@
 # Lockscreens
 
-Fullscreen live weather displays for Raspberry Pi, running across two screens.
+Fullscreen live weather displays for Raspberry Pi.
+
+Maintained by Jakob Werkgarner and Stefan Müller.
 
 ---
-
-## Screens at a glance
-
-| Pi | SSH | Screen 0 | Screen 1 |
-|---|---|---|---|
-| **Pi2** | `bildschirm2` | OPERA Radar | TAWES UIBK |
-| **Pi1** | `bildschirm1 | NASA IMERG | Foto-Webcam |
 
 ### Apps
 
@@ -21,8 +16,8 @@ Fullscreen live weather displays for Raspberry Pi, running across two screens.
 | `NASA_IMERG` | NASA global precipitation (IMERG) | 30 min |
 | `SPARTACUS_Anomaly` | GeoSphere SPARTACUS v3 – 7-day anomaly vs. 1991–2020 | on startup + 6 h |
 
-`SPARTACUS_Anomaly` is not assigned to a screen yet — both Pis are full. Run it
-on whichever screen you want to free up (see [SPARTACUS_Anomaly/README.md](SPARTACUS_Anomaly/README.md)).
+Each app is standalone — run any subset of them, on any Pi, on any screen. Nothing
+in this repo assumes a fixed layout.
 
 ---
 
@@ -34,39 +29,36 @@ git commit -m "your message"
 git push
 
 # then on the Pi:
-ssh bildschirm2@192.168.0.172
+ssh <user>@<pi-host>
 cd ~/Lockscreens && git pull
-# restart the processes (see below)
+# restart whichever apps are running on this Pi (see below)
 ```
 
 Or use `deploy.sh` which does push + pull + restart in one step:
 
 ```bash
-bash deploy.sh bildschirm2@192.168.0.172
-bash deploy.sh bildschirm1@192.168.0.236
+bash deploy.sh <user>@<pi-host>
 ```
 
 ---
 
-## Restarting apps on the Pi
+## Restarting an app on the Pi
 
-After a `git pull`, kill the old processes and relaunch:
+After a `git pull`, kill and relaunch whichever app(s) run on that Pi:
 
-**Pi2** (`bildschirm2@192.168.0.172` — OPERA Radar + TAWES):
 ```bash
-pkill -f opera_radar_pi.py; pkill -f tawes_uibk.py
+pkill -f <app_script>.py
+DISPLAY=:0 python3 ~/Lockscreens/<App_Folder>/<app_script>.py --screen <N> &
+```
+
+e.g.
+```bash
+pkill -f opera_radar_pi.py
 DISPLAY=:0 python3 ~/Lockscreens/OPERA_Radar/opera_radar_pi.py --screen 0 &
-DISPLAY=:0 python3 ~/Lockscreens/TAWES_UIBK/tawes_uibk.py --screen 1 &
 ```
 
-**Pi1** (`bildschirm1@192.168.0.236` — NASA IMERG + Foto-Webcam):
-```bash
-pkill -f foto_webcam.py; pkill -f nasa_imerg.py
-DISPLAY=:0 python3 ~/Lockscreens/NASA_IMERG/nasa_imerg.py --screen 0 &
-DISPLAY=:0 python3 ~/Lockscreens/Foto_Webcam/foto_webcam.py --screen 1 &
-```
-
-Or just reboot the Pi — both apps start automatically via `~/.config/autostart/`.
+Or just reboot the Pi — apps set up with `setup_autostart.sh` start automatically
+via `~/.config/autostart/`.
 
 ---
 
@@ -85,20 +77,17 @@ cd Lockscreens
 git clone https://github.com/Jakobwerkg/Lockscreens.git ~/Lockscreens
 cd ~/Lockscreens
 
-# install dependencies
-bash OPERA_Radar/install_pi.sh     # Pi2
-bash TAWES_UIBK/install_pi.sh      # Pi2
-bash Foto_Webcam/install_pi.sh     # Pi1
-bash NASA_IMERG/install_pi.sh      # Pi1
-bash SPARTACUS_Anomaly/install_pi.sh
+# install dependencies for whichever app(s) you want on this Pi
+bash <App_Folder>/install_pi.sh
 
 # set up autostart
-bash OPERA_Radar/setup_autostart.sh   # Pi2 – screen 0
-bash TAWES_UIBK/setup_autostart.sh   # Pi2 – screen 1
-bash NASA_IMERG/setup_autostart.sh   # Pi1 – screen 0
-bash Foto_Webcam/setup_autostart.sh  # Pi1 – screen 1
-bash SPARTACUS_Anomaly/setup_autostart.sh 0   # argument = monitor index
+bash <App_Folder>/setup_autostart.sh
 ```
+
+> Note: `SPARTACUS_Anomaly/setup_autostart.sh` takes the target screen index as
+> an argument (`bash SPARTACUS_Anomaly/setup_autostart.sh 0`). The other apps'
+> autostart scripts currently launch on a fixed screen — open the script and
+> change the `--screen` value if you want it on a different one.
 
 ---
 
@@ -114,12 +103,11 @@ DISPLAY=:0 python3 ~/Lockscreens/OPERA_Radar/opera_radar_pi.py --screen 0
 ```
 
 **TAWES shows "Error: … retrying"**
-The source URL at `ertel2.uibk.ac.at` is temporarily unreachable — the app retries automatically every 10 minutes.
+The upstream source is temporarily unreachable — the app retries automatically every 10 minutes.
 
 **SSH without password prompts**
 ```bash
-ssh-copy-id bildschirm2@192.168.0.172
-ssh-copy-id bildschirm1@192.168.0.236
+ssh-copy-id <user>@<pi-host>
 ```
 
 ---
@@ -130,9 +118,9 @@ ssh-copy-id bildschirm1@192.168.0.236
 Lockscreens/
   deploy.sh              ← push + pull + restart on Pi
   setup_pi.sh            ← run once on Pi after cloning
-  OPERA_Radar/           → Pi2, screen 0
-  TAWES_UIBK/            → Pi2, screen 1
-  NASA_IMERG/            → Pi1, screen 0
-  Foto_Webcam/           → Pi1, screen 1
-  SPARTACUS_Anomaly/     → not assigned to a screen yet
+  OPERA_Radar/
+  TAWES_UIBK/
+  NASA_IMERG/
+  Foto_Webcam/
+  SPARTACUS_Anomaly/
 ```
