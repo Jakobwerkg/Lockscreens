@@ -14,6 +14,7 @@ cells outside Austria are NaN.  Everything is cached under ./cache/.
 """
 
 import time
+import warnings
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -43,8 +44,8 @@ PARAM_INFO = {
     "RR":   dict(label="Precipitation",     unit="mm/day", long="daily precipitation sum"),
     "SA":   dict(label="Sunshine",          unit="h/day",  long="daily sunshine duration"),
     "TM24": dict(label="Mean Temp.",        unit="°C",     long="daily mean of air temperature"),
-    "TN":   dict(label="Minimum temp.",     unit="°C",     long="daily minimum of air temperature"),
-    "TX":   dict(label="Maximum temp.",     unit="°C",     long="daily maximum of air temperature"),
+    "TN":   dict(label="Min Temp.",         unit="°C",     long="daily minimum of air temperature"),
+    "TX":   dict(label="Max Temp.",         unit="°C",     long="daily maximum of air temperature"),
 }
 
 
@@ -259,7 +260,10 @@ def build_report(end_date: date = None, n_days: int = WINDOW_DAYS):
 
     result = {}
     for p in PARAMS:
-        with np.errstate(invalid="ignore"):
+        # Cells outside Austria are NaN on every day – nanmean warns about
+        # those "empty slices" through `warnings`, which errstate can't catch.
+        with np.errstate(invalid="ignore"), warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
             obs_mean  = np.nanmean(obs[p],  axis=0)
             clim_mean = np.nanmean(clim[p], axis=0)
             diff      = obs_mean - clim_mean

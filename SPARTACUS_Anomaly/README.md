@@ -13,9 +13,9 @@ Six cards on one screen — five maps plus a summary:
 
 | Card | Parameter | Anomaly shown as |
 |---|---|---|
-| Mean temperature | `TM24` – daily mean of air temperature | K difference |
-| Minimum temp. | `TN` – daily minimum | K difference |
-| Maximum temp. | `TX` – daily maximum | K difference |
+| Mean Temp. | `TM24` – daily mean of air temperature | °C difference |
+| Min Temp. | `TN` – daily minimum | °C difference |
+| Max Temp. | `TX` – daily maximum | °C difference |
 | Precipitation | `RR` – daily precipitation sum | ± % of normal |
 | Sunshine | `SA` – daily sunshine duration | hours/day difference |
 | Summary | all five | Austria-wide averages |
