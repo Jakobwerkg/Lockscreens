@@ -51,9 +51,9 @@ BADGE = {
 
 # panel order: (parameter, colormap, levels, colorbar label, extend)
 PANELS = [
-    ("TM24", "RdBu_r",  TEMP_LEVELS, "anomaly  (K)",            "both"),
-    ("TN",   "RdBu_r",  TEMP_LEVELS, "anomaly  (K)",            "both"),
-    ("TX",   "RdBu_r",  TEMP_LEVELS, "anomaly  (K)",            "both"),
+    ("TM24", "RdBu_r",  TEMP_LEVELS, "anomaly  (°C)",           "both"),
+    ("TN",   "RdBu_r",  TEMP_LEVELS, "anomaly  (°C)",           "both"),
+    ("TX",   "RdBu_r",  TEMP_LEVELS, "anomaly  (°C)",           "both"),
     ("RR",   "BrBG",    RAIN_LEVELS, "anomaly  (% of normal)",  "max"),
     ("SA",   SUN_CMAP,  SUN_LEVELS,  "anomaly  (hours/day)",    "both"),
 ]
@@ -163,7 +163,7 @@ def _headline(param, field):
         long = short = f"{value:+.0f}%"
     else:
         value = signed = _area_mean(field["difference"])
-        unit = "h/day" if param == "SA" else "K"
+        unit = "h/day" if param == "SA" else "°C"
         long = short = f"{value:+.1f} {unit}"
     low, high = BADGE[param]
     colour = high if signed > 0 else low if signed < 0 else MUTED

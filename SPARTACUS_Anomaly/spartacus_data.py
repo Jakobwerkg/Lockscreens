@@ -42,7 +42,7 @@ DL_DIR    = CACHE_DIR / "download"
 PARAM_INFO = {
     "RR":   dict(label="Precipitation",     unit="mm/day", long="daily precipitation sum"),
     "SA":   dict(label="Sunshine",          unit="h/day",  long="daily sunshine duration"),
-    "TM24": dict(label="Mean temperature",  unit="°C",     long="daily mean of air temperature"),
+    "TM24": dict(label="Mean Temp.",        unit="°C",     long="daily mean of air temperature"),
     "TN":   dict(label="Minimum temp.",     unit="°C",     long="daily minimum of air temperature"),
     "TX":   dict(label="Maximum temp.",     unit="°C",     long="daily maximum of air temperature"),
 }
