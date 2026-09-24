@@ -31,10 +31,12 @@ WEBCAMS = [
     "moesern",
     "kleinfleisskees",
     "braunschweigerhuette",
-    #"kuersingerhuette",
-    "grossvenediger",
+    "kuersingerhuette",
+    #"grossvenediger",
     "konkordiahuette",
     "zugspitze",
+    "bisamberg"
+    
 ]
 
 SLIDE_SEC   = 10    # seconds between automatic slides
