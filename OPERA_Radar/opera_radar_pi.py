@@ -125,6 +125,8 @@ class RadarApp:
             if not raw:
                 self._set_status("No frames — retrying in 5 min")
             else:
+                # Ensure chronological order (oldest → newest)
+                raw = sorted(raw, key=lambda x: x[0])
                 self._raw = raw
                 save_animation(raw, OUTPUT_GIF, frame_ms=FRAME_MS)
                 purge_old_cache(keep_hours=12)
@@ -145,8 +147,27 @@ class RadarApp:
         self._start_refresh()
 
     def _load(self, tk_frames):
+        # Preserve current playback position across refreshes so the loop does not jump back to the start
+        current_dt = None
+        if self._frames and 0 <= self._idx < len(self._frames):
+            current_dt = self._frames[self._idx][0]
+
         self._frames = tk_frames
-        self._idx = 0
+        # Find the frame closest to (or just after) the previous current time
+        if current_dt is not None and tk_frames:
+            # Prefer the first frame whose timestamp is >= current_dt
+            new_idx = 0
+            for i, (dt, _) in enumerate(tk_frames):
+                if dt >= current_dt:
+                    new_idx = i
+                    break
+            else:
+                # All frames are older; stay at the end
+                new_idx = len(tk_frames) - 1
+            self._idx = new_idx
+        else:
+            self._idx = 0
+
         first = tk_frames[0][0].strftime("%H:%M")
         last  = tk_frames[-1][0].strftime("%H:%M")
         ts    = datetime.now().strftime("%H:%M")
@@ -161,8 +182,12 @@ class RadarApp:
         dt, photo = self._frames[self._idx]
         self.img_label.configure(image=photo)
         self.img_label.image = photo
-        self._idx = (self._idx + 1) % len(self._frames)
-        self._anim_id = self.root.after(FRAME_MS, self._tick)
+
+        next_idx = (self._idx + 1) % len(self._frames)
+        # Pause briefly when wrapping from newest back to oldest so the loop feels clean
+        delay = 1000 if next_idx == 0 else FRAME_MS
+        self._idx = next_idx
+        self._anim_id = self.root.after(delay, self._tick)
 
     def _set_status(self, text):
         self.root.after(0, lambda: self.status.configure(text=text))
