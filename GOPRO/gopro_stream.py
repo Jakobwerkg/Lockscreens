@@ -41,10 +41,12 @@ def start_player():
         "-analyzeduration", "1000000",
         "-sync", "ext",
         "-i", STREAM_URL,
-        "-fs"
+        "-x", "1440",
+        "-y", "900",
+        "-left", "0",
+        "-top", "0"
     ]
     return subprocess.Popen(cmd, env=env)
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--screen", type=int, default=0, help="Screen index (for compatibility)")
