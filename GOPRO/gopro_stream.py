@@ -18,12 +18,24 @@ KEEPALIVE_INTERVAL = 4
 
 def connect_wifi():
     print("Connecting wlan1 to GoPro...")
-    subprocess.run([
-        "sudo", "nmcli", "device", "wifi", "connect",
-        GOPRO_SSID, "password", GOPRO_PASSWORD, "ifname", "wlan1"
-    ], check=False)
+    # Try to bring up existing connection first
+    subprocess.run(["sudo", "-n", "nmcli", "connection", "up", "stefans gopro 7"], check=False)
+    time.sleep(2)
+    # If still not connected, recreate it
+    result = subprocess.run(["nmcli", "-t", "-f", "DEVICE,STATE", "device", "status"], capture_output=True, text=True)
+    if "wlan1:connected" not in result.stdout:
+        subprocess.run(["sudo", "-n", "nmcli", "connection", "delete", "stefans gopro 7"], check=False)
+        subprocess.run([
+            "sudo", "-n", "nmcli", "connection", "add",
+            "type", "wifi",
+            "con-name", "stefans gopro 7",
+            "ifname", "wlan1",
+            "ssid", GOPRO_SSID,
+            "wifi-sec.key-mgmt", "wpa-psk",
+            "wifi-sec.psk", GOPRO_PASSWORD
+        ], check=False)
+        subprocess.run(["sudo", "-n", "nmcli", "connection", "up", "stefans gopro 7"], check=False)
     time.sleep(3)
-
 def start_keepalive():
     cmd = f'''while true; do
   curl -s "http://{GOPRO_IP}/gp/gpControl/execute?p1=gpStream&a1=proto_v2&c1=restart" > /dev/null
