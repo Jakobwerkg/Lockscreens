@@ -1,0 +1,656 @@
+{
+  "current": {
+    "201178": {
+      "parameter": "Q",
+      "wert": 31,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Kajetansbrücke",
+      "gewaesser": "Inn",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201194": {
+      "parameter": "Q",
+      "wert": 150,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Prutz",
+      "gewaesser": "Inn",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201293": {
+      "parameter": "Q",
+      "wert": 112,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Perjen",
+      "gewaesser": "Inn",
+      "hydrodienst": "Tirol",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201459": {
+      "parameter": "Q",
+      "wert": 288,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Magerbach",
+      "gewaesser": "Inn",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201525": {
+      "parameter": "Q",
+      "wert": 332,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Innsbruck (oberh. Sill)",
+      "gewaesser": "Inn",
+      "hydrodienst": "Tirol",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201681": {
+      "parameter": "Q",
+      "wert": 315,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Jenbach-Rotholz",
+      "gewaesser": "Inn",
+      "hydrodienst": "Tirol",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201806": {
+      "parameter": "Q",
+      "wert": 419,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Brixlegg",
+      "gewaesser": "Inn",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "201889": {
+      "parameter": "Q",
+      "wert": 406,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Kirchbichl",
+      "gewaesser": "Inn",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "206201": {
+      "parameter": "W",
+      "wert": 391,
+      "einheit": "cm",
+      "zeitpunkt": "2026-06-30T23:45:00+02:00",
+      "name": "Schärding (Schreibpegel)",
+      "gewaesser": "Inn",
+      "hydrodienst": "Oberösterreich",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207019": {
+      "parameter": "Q",
+      "wert": 1137,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Achleiten",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207068": {
+      "parameter": "W",
+      "wert": 357,
+      "einheit": "cm",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Linz",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207084": {
+      "parameter": "W",
+      "wert": 435,
+      "einheit": "cm",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Mauthausen",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207126": {
+      "parameter": "W",
+      "wert": 236,
+      "einheit": "cm",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Ybbs",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207241": {
+      "parameter": "Q",
+      "wert": 1207,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Korneuburg",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207357": {
+      "parameter": "Q",
+      "wert": 1221,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Kienstock",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207373": {
+      "parameter": "Q",
+      "wert": 1185,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Wildungsmauer",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "207407": {
+      "parameter": "Q",
+      "wert": 1210,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Thebnerstraßl",
+      "gewaesser": "Donau",
+      "hydrodienst": "viaDonau",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "212027": {
+      "parameter": "Q",
+      "wert": 7.57,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Rabland",
+      "gewaesser": "Drau",
+      "hydrodienst": "Tirol",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "212316": {
+      "parameter": "Q",
+      "wert": 77.9,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Lienz-Peggetz",
+      "gewaesser": "Drau",
+      "hydrodienst": "VHP",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "212324": {
+      "parameter": "Q",
+      "wert": 85.8,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-06-30T23:45:00+02:00",
+      "name": "Oberdrauburg-Ort",
+      "gewaesser": "Drau",
+      "hydrodienst": "Kärnten",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "212357": {
+      "parameter": "Q",
+      "wert": 75.6,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-06-30T23:45:00+02:00",
+      "name": "Sachsenburg-Süd",
+      "gewaesser": "Drau",
+      "hydrodienst": "Kärnten",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "213173": {
+      "parameter": "Q",
+      "wert": 201,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-06-30T23:45:00+02:00",
+      "name": "Lavamünd Ort",
+      "gewaesser": "Drau",
+      "hydrodienst": "Kärnten",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "213215": {
+      "parameter": "Q",
+      "wert": 189,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-06-30T23:45:00+02:00",
+      "name": "Amlach",
+      "gewaesser": "Drau",
+      "hydrodienst": "Kärnten",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "230078": {
+      "parameter": "Q",
+      "wert": 350,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Telfs (Fussgängersteg)",
+      "gewaesser": "Inn",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "231092": {
+      "parameter": "Q",
+      "wert": 10.8,
+      "einheit": "m³/s",
+      "zeitpunkt": "2026-07-01T00:00:00+02:00",
+      "name": "Lienz-Falkensteinsteg",
+      "gewaesser": "Drau",
+      "hydrodienst": "TIWAG",
+      "source_collection": "i000501:pegel_aktuell"
+    },
+    "101816": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Ladis-Neuegg",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "102277": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Stams",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "102467": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "St.Martin i.G.",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "102483": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Schwaz",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "102509": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Rotholz",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "103036": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Inzing",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "103176": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Niederndorferberg",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "103309": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Axams",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "103382": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Telfs-Zimmerbergklamm",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "104513": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Münzkirchen",
+      "gewaesser": "",
+      "hydrodienst": "HD Oberösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "104745": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Goldwörth",
+      "gewaesser": "",
+      "hydrodienst": "HD Oberösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "104877": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Linz-Urfahr",
+      "gewaesser": "",
+      "hydrodienst": "HD Oberösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "104885": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Hellmonsödt",
+      "gewaesser": "",
+      "hydrodienst": "HD Oberösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "105635": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Maria Laah",
+      "gewaesser": "",
+      "hydrodienst": "HD Oberösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "105650": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Mauthausen",
+      "gewaesser": "",
+      "hydrodienst": "HD Oberösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "107284": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Melk",
+      "gewaesser": "",
+      "hydrodienst": "HD Niederösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "107342": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Maria Langegg",
+      "gewaesser": "",
+      "hydrodienst": "HD Niederösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "108779": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Tulln-Bildeiche",
+      "gewaesser": "",
+      "hydrodienst": "HD Niederösterreich",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113001": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Sillian",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113035": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Anras",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113118": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Oberdrauburg",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113126": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Greifenburg",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113464": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Hochegg",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113779": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Rosenbach",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113787": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Bärental",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "113837": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Bodental",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114249": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Klopein am Klopeiner See",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114256": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "St.Margarethen ob Töllerberg",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114462": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Heiligengeist-Hundsmarhof",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114512": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Irschen-Leppen",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114876": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Lavamünd",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114934": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Zettersfeld",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "114942": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Nikolsdorf",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "115220": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Emberger Alm",
+      "gewaesser": "",
+      "hydrodienst": "HD Kärnten",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "119313": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Alplhütte",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "119404": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Innsbruck-Seegrube",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "119594": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Karlsbader Hütte",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "119719": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Leckfeldalm",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "120022": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Hall in Tirol",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    },
+    "120030": {
+      "parameter": "",
+      "wert": null,
+      "einheit": "mm",
+      "zeitpunkt": "",
+      "name": "Inzinger Alm-Kaserboden",
+      "gewaesser": "",
+      "hydrodienst": "HD Tirol",
+      "source_collection": "i000501:niederschlag_aktuell"
+    }
+  },
+  "history": {},
+  "last_update": 1782862886.1445725
+}
