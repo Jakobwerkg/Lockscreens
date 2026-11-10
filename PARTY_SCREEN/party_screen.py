@@ -15,6 +15,7 @@ import queue
 import sys
 import threading
 import tkinter as tk
+import tkinter.font as tkfont
 from PIL import Image, ImageTk
 import requests
 
@@ -96,18 +97,16 @@ def normalize(data):
 
 class PartyScreen:
     def __init__(self, root, backend):
+        self.root = root
+        self.backend = backend.rstrip("/")
         self.root.title("Geburtstagsfeschtl")
         self.root.configure(bg="#2b2118")
         self.root.bind("<Escape>", lambda e: self.shutdown())
-
-        # True fullscreen, no top bar
-        self.root.overrideredirect(True)
-        self.root.attributes("-fullscreen", True)
-        self.root.attributes("-topmost", True)
         if sys.platform == "win32":
             self.root.geometry("{0}x{1}+0+0".format(self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
         else:
             self.root.geometry("1440x900+1440+0")
+        self.root.attributes("-fullscreen", True)
 
         self.canvas = tk.Canvas(root, bg="#2b2118", highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
@@ -364,16 +363,19 @@ class PartyScreen:
         if not drinks:
             self.band_top = h
             return
-        row_h = 28
-        band_h = 16 + len(drinks) * row_h
+        band_h = max(1, int(h * 0.15))
         top = h - band_h
         self.band_top = top
         self.canvas.create_rectangle(0, top, w, h, fill=INK, outline="", tags="bottom")
         highest = max((int(d.get("count") or 0) for d in drinks), default=0)
-        bar_x = 210
-        bar_w = max(40, w - bar_x - 80)
-        y = top + 14
-        for drink in drinks:
+        n = len(drinks)
+        row_h = band_h / n
+        size = 15 if row_h >= 28 else 12 if row_h >= 20 else 10
+        font = tkfont.Font(family=FONT, size=size, weight="bold")
+        bar_half = max(2, min(7, int(row_h * 0.28)))
+        bar_x = max(150, min(230, int(w * 0.18)))
+        bar_w = max(40, w - bar_x - 70)
+        for i, drink in enumerate(drinks):
             key = drink.get("id") or drink.get("label")
             count = int(drink.get("count") or 0)
             target = 0 if highest == 0 else count / highest
@@ -381,24 +383,22 @@ class PartyScreen:
             shown += (target - shown) * 0.12
             self.bar_shown[key] = shown
             label = drink.get("label") or key
+            y = top + row_h * (i + 0.5)
             self.canvas.create_text(
-                24, y, text=label, anchor="w", fill="#f4e2c4",
-                font=(FONT, 14, "bold"), tags="bottom",
+                16, y, text=label, anchor="w", fill="#f4e2c4", font=font, tags="bottom",
             )
             self.canvas.create_rectangle(
-                bar_x, y - 7, bar_x + bar_w, y + 7, fill=TRACK, outline="", tags="bottom",
+                bar_x, y - bar_half, bar_x + bar_w, y + bar_half, fill=TRACK, outline="", tags="bottom",
             )
             if shown > 0.01:
                 fill = RUST if count == highest and count > 0 else "#f4e2c4"
                 self.canvas.create_rectangle(
-                    bar_x, y - 7, bar_x + max(8, int(bar_w * shown)), y + 7,
+                    bar_x, y - bar_half, bar_x + max(6, int(bar_w * shown)), y + bar_half,
                     fill=fill, outline="", tags="bottom",
                 )
             self.canvas.create_text(
-                bar_x + bar_w + 12, y, text=str(count), anchor="w", fill="#f4e2c4",
-                font=(FONT, 14, "bold"), tags="bottom",
+                bar_x + bar_w + 12, y, text=str(count), anchor="w", fill="#f4e2c4", font=font, tags="bottom",
             )
-            y += row_h
 
 
 def main():
