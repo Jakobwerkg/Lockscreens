@@ -4,9 +4,10 @@
 Reads http://<host>:8080/api/display and draws it itself.
 Photos are shown whole above the drink bars. A new comment appears in the side space, drifts down, then fades.
 Drink counts race as horizontal bars along the bottom.
+Screen position is controlled by --screen (0 = left, 1 = right).
 
     python3 party_screen.py
-    python3 party_screen.py --backend http://192.168.0.103:8080
+    python3 party_screen.py --backend http://192.168.0.103:8080 --screen 1
 """
 
 import argparse
@@ -96,17 +97,20 @@ def normalize(data):
 
 
 class PartyScreen:
-    def __init__(self, root, backend):
+    def __init__(self, root, backend, screen=1):
         self.root = root
         self.backend = backend.rstrip("/")
+        self.screen = screen
         self.root.title("Geburtstagsfeschtl")
         self.root.configure(bg="#2b2118")
         self.root.bind("<Escape>", lambda e: self.shutdown())
+        self.root.attributes("-fullscreen", True)
+        self.root.overrideredirect(True)
         if sys.platform == "win32":
             self.root.geometry("{0}x{1}+0+0".format(self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
         else:
-            self.root.geometry("1440x900+1440+0")
-        self.root.attributes("-fullscreen", True)
+            x = 0 if self.screen == 0 else 1440
+            self.root.geometry(f"1440x900+{x}+0")
 
         self.canvas = tk.Canvas(root, bg="#2b2118", highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
@@ -407,7 +411,7 @@ def main():
     parser.add_argument("--screen", type=int, default=1)
     args = parser.parse_args()
     root = tk.Tk()
-    PartyScreen(root, args.backend)
+    PartyScreen(root, args.backend, args.screen)
     root.mainloop()
 
 

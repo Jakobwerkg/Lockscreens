@@ -3,6 +3,7 @@
 GoPro stream – reliable version.
 Uses the simple connect/start that worked before.
 Shows a lightweight screensaver only when the camera is offline.
+Screen position is controlled by --screen (0 = left, 1 = right).
 """
 
 import argparse
@@ -27,7 +28,6 @@ def connect_wifi():
     time.sleep(3)
 
 def is_reachable():
-    # GoPro often blocks ping. Check the control endpoint instead.
     try:
         r = subprocess.run(
             ["curl", "-s", "--max-time", "3",
@@ -37,6 +37,7 @@ def is_reachable():
         return r.returncode == 0 and b"status" in r.stdout
     except Exception:
         return False
+
 def start_keepalive():
     cmd = f'''while true; do
   curl -s "http://{GOPRO_IP}/gp/gpControl/execute?p1=gpStream&a1=proto_v2&c1=restart" > /dev/null
@@ -45,9 +46,10 @@ done'''
     return subprocess.Popen(["bash", "-c", cmd],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def start_player():
+def start_player(screen=0):
     env = os.environ.copy()
     env["DISPLAY"] = ":0"
+    x = 0 if screen == 0 else 1440
     cmd = [
         "ffplay",
         "-fflags", "nobuffer",
@@ -55,17 +57,19 @@ def start_player():
         "-analyzeduration", "1000000",
         "-sync", "ext",
         "-i", STREAM_URL,
-        "-fs"
+        "-x", "1440", "-y", "900",
+        "-left", str(x), "-top", "0"
     ]
     return subprocess.Popen(cmd, env=env)
 
-def show_screensaver():
+def show_screensaver(screen=0):
     root = tk.Tk()
     root.title("GoPro")
     root.configure(bg="black")
     root.attributes("-fullscreen", True)
     root.overrideredirect(True)
-    root.geometry("1440x900+0+0")
+    x = 0 if screen == 0 else 1440
+    root.geometry(f"1440x900+{x}+0")
     canvas = tk.Canvas(root, bg="black", highlightthickness=0)
     canvas.pack(fill=tk.BOTH, expand=True)
     logo = canvas.create_text(400, 300, text="DVD", fill="#d4532b",
@@ -91,6 +95,7 @@ def show_screensaver():
     move()
     root.after(3000, check)
     root.mainloop()
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--screen", type=int, default=0)
@@ -106,13 +111,13 @@ def main():
                             f"http://{GOPRO_IP}/gp/gpControl/execute?p1=gpStream&a1=proto_v2&c1=restart"],
                            check=False)
             keepalive = start_keepalive()
-            player = start_player()
-            player.wait()          # blocks until ffplay exits
+            player = start_player(args.screen)
+            player.wait()
             keepalive.terminate()
             print("Stream ended")
         else:
             print("GoPro not reachable – screensaver")
-            show_screensaver()
+            show_screensaver(args.screen)
         time.sleep(2)
 
 if __name__ == "__main__":
