@@ -49,7 +49,7 @@ done'''
 def start_player(screen=0):
     env = os.environ.copy()
     env["DISPLAY"] = ":0"
-    x = 0 if screen == 0 else 1440
+    # Avoid -left/-x/-y – they cause segfaults on this Pi
     cmd = [
         "ffplay",
         "-fflags", "nobuffer",
@@ -57,8 +57,8 @@ def start_player(screen=0):
         "-analyzeduration", "1000000",
         "-sync", "ext",
         "-i", STREAM_URL,
-        "-x", "1440", "-y", "900",
-        "-left", str(x), "-top", "0"
+        "-fs",
+        "-loglevel", "error"
     ]
     return subprocess.Popen(cmd, env=env)
 
@@ -107,6 +107,8 @@ def main():
         connect_wifi()
         if is_reachable():
             print("GoPro found – starting stream")
+            subprocess.run(["pkill", "-f", "ffplay"], check=False)
+            time.sleep(0.5)
             subprocess.run(["curl", "-s",
                             f"http://{GOPRO_IP}/gp/gpControl/execute?p1=gpStream&a1=proto_v2&c1=restart"],
                            check=False)
