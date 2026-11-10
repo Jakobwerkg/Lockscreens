@@ -27,13 +27,16 @@ def connect_wifi():
     time.sleep(3)
 
 def is_reachable():
+    # GoPro often blocks ping. Check the control endpoint instead.
     try:
-        r = subprocess.run(["ping", "-c", "1", "-W", "2", GOPRO_IP],
-                           capture_output=True, timeout=3)
-        return r.returncode == 0
+        r = subprocess.run(
+            ["curl", "-s", "--max-time", "3",
+             f"http://{GOPRO_IP}/gp/gpControl/status"],
+            capture_output=True, timeout=4
+        )
+        return r.returncode == 0 and b"status" in r.stdout
     except Exception:
         return False
-
 def start_keepalive():
     cmd = f'''while true; do
   curl -s "http://{GOPRO_IP}/gp/gpControl/execute?p1=gpStream&a1=proto_v2&c1=restart" > /dev/null
