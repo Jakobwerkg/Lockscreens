@@ -67,28 +67,27 @@ def show_screensaver():
     canvas.pack(fill=tk.BOTH, expand=True)
     logo = canvas.create_text(400, 300, text="DVD", fill="#d4532b",
                               font=("Arial", 48, "bold"))
-    dx, dy = 5, 3
+    dx = [5]
+    dy = [3]
 
     def move():
-        canvas.move(logo, dx, dy)
+        canvas.move(logo, dx[0], dy[0])
         x, y = canvas.coords(logo)
-        nonlocal dx, dy
         if x <= 60 or x >= 1380:
-            dx = -dx
+            dx[0] = -dx[0]
         if y <= 40 or y >= 860:
-            dy = -dy
+            dy[0] = -dy[0]
         root.after(20, move)
 
-    move()
-    # Check every 3 seconds if GoPro is back
     def check():
         if is_reachable():
             root.destroy()
         else:
             root.after(3000, check)
+
+    move()
     root.after(3000, check)
     root.mainloop()
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--screen", type=int, default=0)
