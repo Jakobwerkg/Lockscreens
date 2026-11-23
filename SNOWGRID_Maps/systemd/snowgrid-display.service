@@ -1,0 +1,26 @@
+# Template: install.sh replaces the @…@ placeholders and installs this as a
+# *user* unit to ~/.config/systemd/user/snowgrid-display.service.
+# Shows both maps fullscreen on the X11 display and re-reads them every
+# @RELOAD_S@ s, so new images appear without restarting.
+[Unit]
+Description=SNOWGRID map slideshow (feh, X11)
+After=graphical-session.target
+PartOf=graphical-session.target
+# Keep retrying forever instead of hitting systemd's start limit.
+StartLimitIntervalSec=0
+
+[Service]
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+# Wait (up to 2 min) for the X server and for the first images; if they are
+# not there yet the start fails and Restart= tries again.
+# ($$ is systemd's escape for a literal $ passed to the shell.)
+ExecStartPre=/bin/sh -c 'i=0; while [ $$i -lt 120 ]; do [ -S /tmp/.X11-unix/X0 ] && [ -s "@OUTPUT_DIR@/snow_depth.png" ] && [ -s "@OUTPUT_DIR@/snow_change_24h.png" ] && exit 0; i=$$((i+1)); sleep 1; done; echo "X display or images not ready"; exit 1'
+ExecStart=/usr/bin/feh --fullscreen --hide-pointer --auto-zoom --no-menus --quiet --image-bg black --reload @RELOAD_S@ --slideshow-delay @SLIDESHOW_DELAY_S@ "@OUTPUT_DIR@/snow_depth.png" "@OUTPUT_DIR@/snow_change_24h.png"
+Restart=on-failure
+RestartSec=15
+
+[Install]
+# default.target as well: on Raspberry Pi OS (LXDE/X11) graphical-session.target
+# is often never reached; the ExecStartPre loop waits for X instead.
+WantedBy=graphical-session.target default.target

@@ -1,0 +1,94 @@
+# SNOWGRID snow-depth maps: all settings.
+# Relative paths are resolved against the directory containing this file.
+# After changing [schedule] or [display], re-run ./install.sh so the systemd
+# units pick up the new values. Everything else takes effect on the next run.
+
+[paths]
+output_dir = "output"              # snow_depth.png, snow_change_24h.png (+ archive/ with dated copies)
+cache_dir = "cache"                # downloaded NetCDF files
+natural_earth_dir = "naturalearth" # offline Natural Earth shapefiles (filled by install.sh)
+keep_days = 7                      # keep cache files and dated PNGs for this many days
+
+[schedule]
+interval_hours = 3                 # systemd timer interval (1-24); also used by loop mode
+
+[api]
+base_url = "https://dataset.api.hub.geosphere.at/v1/grid/historical/snowgrid_cl-v2-1d-1km"
+parameter = "snow_depth"
+timeout_s = 60                     # per request
+retries = 5                        # extra attempts after the first one
+backoff_s = 5                      # wait 5, 10, 20, 40, 80 s between attempts ...
+max_backoff_s = 300                # ... but never longer than this
+
+[image]
+width = 1920
+height = 1080
+dpi = 100
+background = "#0e1116"
+foreground = "#e8eaed"
+land = "#1b222b"                   # Austria without snow
+border = "#f2f2f2"                 # national borders
+state_border = "#7d8a99"           # Bundesländer
+water = "#4a86b8"                  # rivers and lakes
+
+[depth]
+# Class boundaries in cm. One colour per class plus one for values above the
+# last level ("200+"), so `colors` has exactly as many entries as `levels`.
+levels = [0, 1, 5, 10, 20, 50, 100, 200]
+colors = [
+  "#4d6077",  #   0 -   1 cm
+  "#3b7dbf",  #   1 -   5 cm
+  "#33a3d9",  #   5 -  10 cm
+  "#5fcbe9",  #  10 -  20 cm
+  "#8e8cf0",  #  20 -  50 cm
+  "#b067e0",  #  50 - 100 cm
+  "#e061bf",  # 100 - 200 cm
+  "#ffffff",  # 200+ cm
+]
+no_snow_threshold_cm = 0.1         # below this a cell counts as "no snow" (transparent)
+
+[change]
+limit_cm = 30                      # colour scale -30 ... +30 cm, arrows beyond
+cmap = "berlin_r"                  # diverging, dark centre (matplotlib >= 3.10): blue = gain, red = loss
+fallback_cmap = "RdBu"             # used if `cmap` is not available
+
+[display]
+enabled = true                     # install the feh slideshow user service
+reload_s = 60                      # feh --reload
+slideshow_delay_s = 30             # feh --slideshow-delay
+
+[[cities]]
+name = "Bregenz"
+lon = 9.7471
+lat = 47.5031
+
+[[cities]]
+name = "Innsbruck"
+lon = 11.3933
+lat = 47.2692
+
+[[cities]]
+name = "Salzburg"
+lon = 13.0550
+lat = 47.8095
+
+[[cities]]
+name = "Linz"
+lon = 14.2858
+lat = 48.3069
+
+[[cities]]
+name = "Wien"
+lon = 16.3738
+lat = 48.2082
+align = "right"
+
+[[cities]]
+name = "Graz"
+lon = 15.4395
+lat = 47.0707
+
+[[cities]]
+name = "Klagenfurt"
+lon = 14.3050
+lat = 46.6247

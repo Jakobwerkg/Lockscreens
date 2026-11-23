@@ -1,0 +1,19 @@
+# Template: install.sh replaces @INTERVAL_HOURS@ (from config.toml
+# [schedule] interval_hours) and installs this to /etc/systemd/system/.
+[Unit]
+Description=Run snowgrid.service at boot and every @INTERVAL_HOURS@ h
+
+[Timer]
+# Shortly after boot (the service itself waits for network-online.target) ...
+OnBootSec=1min
+# ... then every @INTERVAL_HOURS@ hours on the clock (00:00, 03:00, ... for 3 h).
+OnCalendar=*-*-* 00/@INTERVAL_HOURS@:00:00
+# Catch up on a run missed while the Pi was off.
+Persistent=true
+# Spread load on the GeoSphere API a little.
+RandomizedDelaySec=5min
+AccuracySec=1min
+Unit=snowgrid.service
+
+[Install]
+WantedBy=timers.target

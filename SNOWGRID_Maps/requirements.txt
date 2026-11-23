@@ -1,0 +1,9 @@
+# Lower bounds are what Raspberry Pi OS Bookworm ships as python3-* packages,
+# so the non-aarch64 fallback (apt + --system-site-packages venv) is satisfied
+# without pip replacing anything. On aarch64 pip installs current wheels.
+requests>=2.28
+numpy>=1.24
+xarray>=2023.1
+netCDF4>=1.6
+matplotlib>=3.6
+cartopy>=0.21

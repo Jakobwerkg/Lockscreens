@@ -1,0 +1,25 @@
+# Template: install.sh replaces the @…@ placeholders and installs the result
+# to /etc/systemd/system/snowgrid.service. Triggered by snowgrid.timer.
+[Unit]
+Description=SNOWGRID snow depth maps (GeoSphere Austria) - fetch and render
+Documentation=file://@APP_DIR@/README.md
+Wants=network-online.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=oneshot
+User=@USER@
+Group=@GROUP@
+WorkingDirectory=@APP_DIR@
+Environment=PYTHONUNBUFFERED=1
+Environment=MPLBACKEND=Agg
+Environment=MPLCONFIGDIR=@CACHE_DIR@/matplotlib
+ExecStart=@VENV@/bin/python -m snowgrid.main --once --config @APP_DIR@/config.toml
+# Background job: be nice to the display and anything else on the Pi.
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=20min
+# A failed run exits 1 (logged); exit 2 = config error. Neither stops the timer.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
