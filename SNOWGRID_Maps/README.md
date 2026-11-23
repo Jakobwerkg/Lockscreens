@@ -178,9 +178,37 @@ systemctl --user restart snowgrid-display
 systemctl --user disable --now snowgrid-display   # or set [display] enabled = false and re-run install.sh
 ```
 
-`feh` shows both maps fullscreen, switches every 30 s, and re-reads the files
-every 60 s, so new maps appear without restarting. The unit waits for the X
-server and for the first images. It restarts on failure.
+`feh` shows both maps on one monitor, switches every 30 s, and re-reads the
+files every 60 s, so new maps appear without restarting. The unit waits for
+the X server and for the first images. It restarts on failure.
+
+### Choosing the monitor
+
+`[display] screen` picks the monitor the same way `--screen N` does in the
+other apps: 0 = leftmost, 1 = the next one to the right (from `xrandr`). The
+window is placed exactly over that monitor. After changing it:
+
+```bash
+systemctl --user restart snowgrid-display
+```
+
+To check which monitor it will use without starting feh:
+`DISPLAY=:0 .venv/bin/python -m snowgrid.display --dry-run`
+
+### Replacing another app on that monitor
+
+Two apps on one monitor will cover each other, so turn the old one off. For
+example, for `LIDAR_UIBK` (started from the desktop autostart):
+
+```bash
+rm ~/.config/autostart/lidar-uibk.desktop   # don't start it at login any more
+pkill -f lidar_uibk.py                      # stop the running one
+systemctl --user restart snowgrid-display
+```
+
+Other apps work the same way: look in `~/.config/autostart/` for `.desktop`
+files, or check `systemctl --user list-units --type=service` for ones set up by
+`setup_pi.sh` (`systemctl --user disable --now <name>`).
 
 ---
 
@@ -196,7 +224,7 @@ Everything is in `config.toml`:
 | `[image]` | `width`, `height` (default 1920×1080), `dpi`, colours (`background`, `foreground`, `land`, `border`, `state_border`, `water`) |
 | `[depth]` | `levels` and one colour per level in `colors` (the last colour is the 200+ class), `no_snow_threshold_cm` |
 | `[change]` | `limit_cm` (±30), `cmap` (`berlin_r`, which needs matplotlib ≥ 3.10), `fallback_cmap` |
-| `[display]` | `enabled`, `reload_s`, `slideshow_delay_s` |
+| `[display]` | `enabled`, `reload_s`, `slideshow_delay_s`, `screen` (0 = leftmost monitor) |
 | `[[cities]]` | `name`, `lon`, `lat`, optional `align = "right"` to put the label left of the dot |
 
 Requests retry on timeouts, connection errors, HTTP 429 and 5xx, with

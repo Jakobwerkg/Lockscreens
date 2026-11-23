@@ -56,6 +56,7 @@ fallback_cmap = "RdBu"             # used if `cmap` is not available
 enabled = true                     # install the feh slideshow user service
 reload_s = 60                      # feh --reload
 slideshow_delay_s = 30             # feh --slideshow-delay
+screen = 0                         # monitor: 0 = leftmost, 1 = next to the right, ... (as --screen in the other apps)
 
 [[cities]]
 name = "Bregenz"

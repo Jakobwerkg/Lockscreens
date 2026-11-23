@@ -85,6 +85,7 @@ class DisplayConfig:
     enabled: bool
     reload_s: int
     slideshow_delay_s: int
+    screen: int = 0
 
 
 @dataclass(frozen=True)
@@ -235,7 +236,10 @@ def load_config(path: str | Path) -> Config:
         enabled=_get(disp_t, "enabled", bool, "display"),
         reload_s=_get(disp_t, "reload_s", int, "display"),
         slideshow_delay_s=_get(disp_t, "slideshow_delay_s", int, "display"),
+        screen=int(disp_t.get("screen", 0)),
     )
+    if display.screen < 0:
+        raise ConfigError("[display] screen must be >= 0")
 
     interval = _get(sched, "interval_hours", int, "schedule")
     if not 1 <= interval <= 24:

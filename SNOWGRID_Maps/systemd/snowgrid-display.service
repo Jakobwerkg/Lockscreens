@@ -1,7 +1,8 @@
 # Template: install.sh replaces the @…@ placeholders and installs this as a
 # *user* unit to ~/.config/systemd/user/snowgrid-display.service.
-# Shows both maps fullscreen on the X11 display and re-reads them every
-# @RELOAD_S@ s, so new images appear without restarting.
+# Shows both maps on one monitor ([display] screen) of the X11 display and
+# re-reads them every [display] reload_s seconds, so new images appear
+# without restarting. After editing [display], just restart this unit.
 [Unit]
 Description=SNOWGRID map slideshow (feh, X11)
 After=graphical-session.target
@@ -16,7 +17,10 @@ Environment=XAUTHORITY=%h/.Xauthority
 # not there yet the start fails and Restart= tries again.
 # ($$ is systemd's escape for a literal $ passed to the shell.)
 ExecStartPre=/bin/sh -c 'i=0; while [ $$i -lt 120 ]; do [ -S /tmp/.X11-unix/X0 ] && [ -s "@OUTPUT_DIR@/snow_depth.png" ] && [ -s "@OUTPUT_DIR@/snow_change_24h.png" ] && exit 0; i=$$((i+1)); sleep 1; done; echo "X display or images not ready"; exit 1'
-ExecStart=/usr/bin/feh --fullscreen --hide-pointer --auto-zoom --no-menus --quiet --image-bg black --reload @RELOAD_S@ --slideshow-delay @SLIDESHOW_DELAY_S@ "@OUTPUT_DIR@/snow_depth.png" "@OUTPUT_DIR@/snow_change_24h.png"
+# Places feh over monitor [display] screen of config.toml (0 = leftmost, via
+# xrandr) and then exec's feh, so systemd supervises feh itself.
+WorkingDirectory=@APP_DIR@
+ExecStart=@VENV@/bin/python -m snowgrid.display --config @APP_DIR@/config.toml
 Restart=on-failure
 RestartSec=15
 

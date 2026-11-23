@@ -55,7 +55,7 @@ echo "  display:      $([[ $DISPLAY_ENABLED == 1 ]] && echo enabled || echo disa
 # ── apt packages ─────────────────────────────────────────────────────────────
 ARCH="$(uname -m)"
 APT_PKGS=(python3-venv python3-pip ca-certificates)
-[[ $DISPLAY_ENABLED == 1 ]] && APT_PKGS+=(feh)
+[[ $DISPLAY_ENABLED == 1 ]] && APT_PKGS+=(feh x11-xserver-utils)  # xrandr picks the monitor
 if [[ $ARCH != aarch64 ]]; then
     # No reliable pip wheels for cartopy & friends here: use Debian's builds.
     APT_PKGS+=(python3-cartopy python3-numpy python3-matplotlib python3-xarray
